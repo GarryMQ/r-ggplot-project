@@ -72,5 +72,208 @@ ggplot(data=interviews_plotting, aes(x=no_membrs, y=number_items, color=village)
 
 #now we have a line for each, beaause we have placed the color village inthe first aes, not the geom_jitter script
 
-ggsave("fig_output/membrs_item.png", interview_plot, width = 15, height = 10,
-       dpi = 300)
+ggsave("fig_output/membrs_item.png", interview_plot, width = 15, height = 10, dpi =72)
+
+### Exercise 7 ##
+
+ggplot(data=interviews_plotting, aes(x=village, y=rooms)) + 
+  geom_jitter(aes(color=respondent_wall_type), alpha = 0.5, width = 0.2, height = 0.2, size = 3)
+
+# 3 villages and villages of differnt wall types and rooms = this gives me some sense of what is going on wuth the data
+
+# distribution and how freuenet are some variables - histograms - data points fall into bins - take the continuous rnage and place into bins of different sizes.
+# gg plot so that you don't need to do any of the counting 
+# looking at household size and how common are households of different sizes
+
+ggplot(interviews_plotting, aes(x=no_membrs)) +
+  geom_histogram()
+
+# we know that households will only hold whole numbers, so set the bin widtuh for each possible household size
+
+ggplot(interviews_plotting, aes(x=no_membrs)) +
+  geom_histogram(binwidth = 1)
+
+#create border between bins more visible - set the line colour to white
+
+ggplot(interviews_plotting, aes(x=no_membrs)) +
+  geom_histogram(binwidth = 1, color="white")
+
+# histogram is improving, but can still improve - colour and more informaiton
+
+#separate data bu village
+
+ggplot(interviews_plotting, aes(x=no_membrs, fill=village)) +
+  geom_histogram(binwidth = 1, color="white")
+
+#but this is hard to read - each bin is stacked ontop of one another - so maybe the histogram is not the best plot - so could plot a frequency polygon - that is bars instead of lines
+
+ggplot(interviews_plotting, aes(x=no_membrs, color=village)) +
+  geom_freqpoly(binwidth=1)
+
+#so now we can see household size to village, but it is not ideal - one of the problems is that we amay have different levels of observations in differnet villages - is it more common or just more data - so beware of the counts - so instead, the relative frequencey -rather than the total
+
+ggplot(interviews_plotting, aes(x=no_membrs, y=stat(density), color=village)) + geom_freqpoly(binwidth=1)
+
+#now everything is scaled for the amount of data for each plot - which gives you a slightly different picture
+
+#actual deinsity plot - data that is continuous - various nubers some are close together and otehrs are far apart - a smoother plt
+
+ggplot(interviews_plotting, aes(x=no_membrs, fill=village)) +
+         geom_density(alpha=0.4)
+
+
+##Categorical data - after lunch session 
+# all you need is one varible
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type)) +
+  geom_bar()
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, fill=village)) +
+  geom_bar()
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, fill=village)) +
+  geom_bar(position = "dodge")
+
+#dodge = side by side bar chart
+#split data by wall type and how many respondents
+
+table(interviews_plotting$respondent_wall_type, interviews_plotting$ village)
+
+# question in class about what is the 0 on the chart   
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, fill=village)) +
+  geom_bar(position = "dodge") + facet_wrap(~ respondent_wall_type)
+
+ggplot(data = interviews_plotting,
+       aes(x = village, fill=village)) +
+  geom_bar(position = "dodge") + 
+  facet_wrap(~ respondent_wall_type) +
+  theme_bw()
+
+# This was the commencement of the code to be able to better chart the data
+# We needed to remove the 0 from an earlier plot
+
+counts <- table(interviews_plotting$village, interviews_plotting$respondent_wall_type)
+counts
+
+# change colors to change colours
+
+ggplot(data = interviews_plotting,
+       aes(x = village, fill=village)) +
+  geom_bar(position = "dodge") + 
+  facet_wrap(~ respondent_wall_type) +
+  scale_fill_brewer() +
+  theme_bw()
+
+##### back to where we were ###
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, fill=village)) +
+  geom_bar(position = "dodge")
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, fill=village)) +
+  geom_bar(position = "fill")
+
+## y label still says count  so we need to change - now it fits what is being shown
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, fill=village)) +
+  geom_bar(position = "fill") +
+  ylab("proportion")
+
+#but we have missed the number count
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, fill=village)) +
+  geom_bar(position = "fill") +
+  ylab("proportion")+
+  stat_count(geom = "text",
+             aes(label = stat(count)),
+             position = position_fill(vjust = 0.5) , color = "white")
+
+#looked at wall types across villages
+# exercise look at in each vilage what is being built
+#now we have changed the axis
+
+ggplot(data = interviews_plotting,
+       aes(x = village, fill=respondent_wall_type)) +
+  geom_bar(position = "fill") +
+  ylab("proportion")+
+  stat_count(geom = "text",
+             aes(label = stat(count)),
+             position = position_fill(vjust = 0.5) , color = "white")
+
+## Box plots - splitting up categorical
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = rooms)) + 
+  geom_boxplot()
+
+# does not really show how mamy buildings are in each
+# we need to add a jitter plot on top of the box plot
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = rooms)) + 
+  geom_boxplot() +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2, color = "tomato")
+
+### outlier.shape = NA means that the outlier points are removed
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = rooms)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2, color = "tomato")
+
+#now we can see where each village sits within the box plots - we have added the colour to the geom-jitter srcipt
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = rooms)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2,
+              aes(color = village))
+
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = liv_count)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2,
+              aes(color = village))
+
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = liv_count)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2,
+              aes(color = memb_assoc))
+
+# we can split up the box plots, but what is the problem here? jitterer points are not split by member association variable
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = liv_count, fill = memb_assoc,
+           color = memb_assoc)) + 
+  geom_boxplot(alpha = 0.5) +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2)
+
+
+## now we have separated each of the box plots for each of the categories
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = liv_count, fill = memb_assoc,
+           color = memb_assoc)) + 
+  geom_boxplot(alpha = 0.5) +
+geom_point(alpha = 0.5, position = position_jitterdodge(jitter.width = 0.1,
+                                                        jitter.height = 0.1))
+
+#violin plot - something like a box plot...##
+#showing the spread and distributon
+
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = rooms)) +
+  geom_violin(alpha = 0) +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2, color = "tomato")
+
+#in the below version, the aesthetic is embedded in the jitter code, so the colours are linked to the villages
+ggplot(data = interviews_plotting,
+       aes(x = respondent_wall_type, y = rooms)) +
+  geom_violin(alpha = 0) +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2, aes(color = village))
+
+

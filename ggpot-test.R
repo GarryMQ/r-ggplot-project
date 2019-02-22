@@ -276,4 +276,114 @@ ggplot(data = interviews_plotting,
   geom_violin(alpha = 0) +
   geom_jitter(alpha = 0.5, width = 0.2, height = 0.2, aes(color = village))
 
+ggplot(data = interviews_plotting,
+       aes(x = village, y = rooms)) +
+  geom_violin(alpha = 0) +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2, aes(color = respondent_wall_type))
 
+
+#### Final Session - following afternoon tea #######
+
+#customise plots ##
+
+ggplot(data = interviews_plotting, aes(fill=respondent_wall_type, x = village)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  ylab("Proportion") + xlab("Village")
+
+# Add a title to a plot
+ggplot(data = interviews_plotting, aes(fill=respondent_wall_type, x = village)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  ylab("Proportion") + xlab("Village") + ggtitle ("Proportion of Wall Type by Village")
+
+### To combine all label information in one line of code 'labs'
+ggplot(data = interviews_plotting, aes(fill=respondent_wall_type, x = village)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  labs(x = "Village", y = "Proportion", title = "Wall type by village")
+
+
+# plot has label on left - not ideal, so how can it be fixed?
+ggplot(data = interviews_plotting, aes(fill=respondent_wall_type, x = village)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  labs(x = "Village", y = "Proportion", title = "Wall type by village") +
+  guides(fill=guide_legend(title="Wall Type"))
+
+# it does not change the labels for the wall types. GG plt has scale function and you scale_ and the aesthetic... anything that you can map to data
+
+## now we have changed the names in the legend
+
+ggplot(data = interviews_plotting, aes(fill=respondent_wall_type, x = village)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  labs(x = "Village", y = "Proportion", title = "Wall type by village") +
+  guides(fill=guide_legend(title="Wall Type")) +
+scale_fill_discrete(labels=c("burnt brick", "cement", "mud daub", "sunbricks"))
+
+
+##Facet wrap - now 3 for each viallage, but it is messy, so needs improvement
+ggplot(data = interviews_plotting, aes(fill=memb_assoc, x = respondent_wall_type)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  labs(x = "wall type", y = "Proportion") + facet_wrap(~village)
+
+
+#break up plots over 2 rows
+ggplot(data = interviews_plotting, aes(fill=memb_assoc, x = respondent_wall_type)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  labs(x = "wall type", y = "Proportion") + facet_wrap(~village, nrow = 2) +
+  scale_x_discrete(labels=c("burnt brick", "cement", "mud daub", "sunbricks"))
+
+### Rotate labels so that they fit - rotate by 45 degrees - x axis text - we are adjusting the text
+ggplot(data = interviews_plotting, aes(fill=memb_assoc, x = respondent_wall_type)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  labs(x = "wall type", y = "Proportion") + facet_wrap(~village, nrow = 2) +
+  scale_x_discrete(labels=c("burnt brick", "cement", "mud daub", "sunbricks")) +
+  theme(axis.text.x = element_text(angle=45, hjust = 1))
+
+### background is not grey any more  
+
+ggplot(data = interviews_plotting, aes(fill=memb_assoc, x = respondent_wall_type)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  labs(x = "wall type", y = "Proportion") + facet_wrap(~village, nrow = 2) +
+  scale_x_discrete(labels=c("burnt brick", "cement", "mud daub", "sunbricks"))+
+  theme_bw() +
+  theme(axis.text.x = element_text(angle=45, hjust = 1))
+
+
+### many adjustments in this code
+# member associaiton , increase in text size, add plot title and centre
+ggplot(data = interviews_plotting, aes(fill=memb_assoc, x = respondent_wall_type)) +
+  geom_bar(position = "fill")+
+  stat_count(geom = "text", aes(label = stat(count)),
+             position=position_fill(vjust=0.5), color = "white") +
+  labs(x = "wall type", y = "Proportion") + facet_wrap(~village, nrow = 2) +
+  scale_x_discrete(labels=c("burnt brick", "cement", "mud daub", "sunbricks"))+
+  scale_y_continuous(breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1.0)) +
+  theme_bw() +
+  guides(fill=guide_legend(title = "Member\nAssociation")) +
+  ggtitle("Plot Title") +
+  theme(axis.text.x = element_text(angle=45, hjust = 1, size = 12), 
+        plot.title = element_text(hjust=0.5))
+
+
+#### create my theme ###
+
+my_theme <- theme(axis.text.x = element_text(angle=45, hjust = 1, size = 12), 
+                  plot.title = element_text(hjust=0.5))
+
+  

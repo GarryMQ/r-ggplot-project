@@ -45,4 +45,32 @@ ggplot(data = interviews_plotting,
 ggsave("fig_output/membrs_item.png", interview_plot, width = 15, height = 10,
        dpi = 300)
 
+## Exercise 3 ##
 
+ggplot(data = interviews_plotting,
+       aes(x = no_membrs, y = number_items)) +
+  geom_jitter(alpha = 0.4, size = 2.0, width = 0.20, height = 0.2)
+
+####
+ggplot(data=interviews_plotting, aes(x=no_membrs, y=number_items)) +
+  geom_jitter(alpha = 0.5, width = 0.2, height = 0.2, size = 4)
+
+## keep jitter to a lower number, if it is too high, it will distort the display
+#different villages - to add some colour - need to map village values to the colour of the plot - same as the way we handled the x and y coordinates)
+
+ggplot(data=interviews_plotting, aes(x=no_membrs, y=number_items, color=village)) + geom_jitter(alpha = 0.5, width = 0.2, height = 0.2, size = 4)
+
+ggplot(data=interviews_plotting, aes(x=no_membrs, y=number_items)) + geom_jitter(aes(color=village), alpha = 0.5, width = 0.2, height = 0.2, size = 4)
+
+## to add a regression line - geo_smooth
+
+ggplot(data=interviews_plotting, aes(x=no_membrs, y=number_items)) + geom_jitter(aes(color=village), alpha = 0.5, width = 0.2, height = 0.2, size = 4) + geom_smooth(method = "lm")
+
+# this is one line for all of the data, rather than a particular village
+
+ggplot(data=interviews_plotting, aes(x=no_membrs, y=number_items, color=village)) + geom_jitter(alpha = 0.5, width = 0.2, height = 0.2, size = 4) + geom_smooth(method = "lm")
+
+#now we have a line for each, beaause we have placed the color village inthe first aes, not the geom_jitter script
+
+ggsave("fig_output/membrs_item.png", interview_plot, width = 15, height = 10,
+       dpi = 300)
